@@ -27,10 +27,10 @@ export class stateManger {
         return stateManger.instance
     }
     addUser(userId: string, ws: WebSocket): void {
-        if (this.users.get(userId)) {
-            console.log("User Already Exist")
-            return;
-        }
+        // if (this.users.get(userId) || this.users.) {
+        //     console.log("User Already Exist")
+        //     return;
+        // }
         this.users.set(userId, {
             userId: userId,
             ws: ws,
@@ -55,13 +55,11 @@ export class stateManger {
             return 
         }
         
-        if(user.rooms?.has(roomId)){
-            console.log("Room already exsists")
-        } else {
+       
             console.log("Joining Room "+roomId)
             user.rooms?.add(roomId)
             return 
-        }
+        
 
     }
     removeUserFromRoom(userId: string, roomId: number): void {
