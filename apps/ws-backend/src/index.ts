@@ -52,11 +52,11 @@ wss.on('connection', function connection(ws, request) {
     // { type : "leave_room", roomId : 1 }
     // { type : "chat", message: "hi there" ,roomId : 1 }
 
-    try {
-
-
+try {
+  
+  
       const parsedData = JSON.parse(data as unknown as string)
-
+  
       if (parsedData.type == "join_room") {
         if (typeof parsedData.roomId !== "number") {
           console.log("Invalid roomId type");
@@ -65,48 +65,44 @@ wss.on('connection', function connection(ws, request) {
         const findRoom = await prismaClient.room.findUnique({
           where: { id: parsedData.roomId }
         })
-
+  
         if (findRoom == null) {
           console.log("Room not in db")
           return
         }
         instance.addUserToRoom(userId, parsedData.roomId)
-
-
+  
+  
       }
-
-      if (parsedData.type == "leave_room") {
-        if (typeof parsedData.roomId !== "number") {
+  
+      if(parsedData.type == "leave_room"){
+         if (typeof parsedData.roomId !== "number") {
           console.log("Invalid roomId type");
           return;
         }
-        instance.removeUserFromRoom(userId, parsedData.roomId
-
+        instance.removeUserFromRoom(userId,parsedData.roomId
+  
         )
       }
-
-      if (parsedData.type === "chat") {
+  
+      if(parsedData.type == "chat"){
         const roomId = parsedData.roomId;
         const message = parsedData.message;
-
-        const roomUsers = instance.getUsersInRoom(roomId);
-
-        roomUsers.forEach(user => {
-          for (const ws of user.ws) {
-            ws.send(JSON.stringify({
-              type: "chat",
-              message: message
-            }));
-          }
-          console.log(roomUsers)
-        });
+  
+        const roomUsers = instance.getUsersInRoom(roomId)
+  
+        roomUsers.forEach(user=>{
+          user.ws.send(JSON.stringify({
+            type : "chat",
+            message:message
+          }))
+        })
       }
-
-
-
-    } catch (error) {
-      console.log(error)
-    }
+  
+  
+} catch (error) {
+  console.log(error)
+}
 
   });
 

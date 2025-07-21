@@ -1,7 +1,7 @@
 import { WebSocket } from "ws";
 interface User {
     userId: string;
-    ws: Set<WebSocket>;
+    ws: WebSocket;
     rooms?: Set<number>
 }
 // interface Room {
@@ -27,58 +27,67 @@ export class stateManger {
         return stateManger.instance
     }
     addUser(userId: string, ws: WebSocket): void {
-
-        const existingUser = this.users.get(userId)
-        if (existingUser) {
-            existingUser.ws.add(ws)
-            console.log("exsisting user add the ws object")
-            return
+        if (this.users.get(userId)) {
+            console.log("User Already Exist")
+            return;
         }
         this.users.set(userId, {
             userId: userId,
-            ws: new Set([ws]),
+            ws: ws,
             rooms: new Set()
         })
 
     }
     getUser(userId: string): User | undefined {
-        return this.users.get(userId);
+        //getting user by id and not by ws object
+        const findUser = this.users.get(userId)
+        if (findUser == undefined) {
+            return undefined
+        }
+        if (findUser.userId == userId) {
+            return findUser
+        }
     }
     addUserToRoom(userId: string, roomId: number): void {
         const user = instance.getUser(userId);
-        if (!user) {
+        if (user == undefined) {
             console.log("User Not Found")
-            return
+            return 
         }
-
-        user.rooms?.add(roomId)
-        console.log(`User ${userId} joined room ${roomId}`);
+        
+        if(user.rooms?.has(roomId)){
+            console.log("Room already exsists")
+        } else {
+            console.log("Joining Room "+roomId)
+            user.rooms?.add(roomId)
+            return 
+        }
 
     }
     removeUserFromRoom(userId: string, roomId: number): void {
-        const user = instance.getUser(userId);
-        if (!user) {
+         const user = instance.getUser(userId);
+        if (user == undefined) {
             console.log("User Not Found")
-            return
+            return 
         }
-
-        if (user.rooms?.has(roomId)) {
+        
+        if(user.rooms?.has(roomId)){
             user.rooms.delete(roomId)
-              console.log(`User ${userId} left room ${roomId}`);
-        }
+            console.log("Room Left")
+        } 
     }
     getUsersInRoom(roomId: number): User[] {
-        const usersInRoom: User[] = []
-        for (const user of this.users.values()) {
-            if (user.rooms?.has(roomId)) {
+     const usersInRoom:User[] = []
+        for(const user of this.users.values()){
+            if(user.rooms?.has(roomId)){
                 usersInRoom.push(user)
             }
         }
 
 
-        return usersInRoom
+     return usersInRoom
     }
-
+    
     // removeUser(userId: string): void
     // createRoom(roomName: string): void
     // deleteRoom(roomName: string): void
