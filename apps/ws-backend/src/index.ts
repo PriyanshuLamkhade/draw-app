@@ -70,8 +70,8 @@ try {
           console.log("Room not in db")
           return
         }
-        instance.addUserToRoom(userId, parsedData.roomId)
-  
+
+        instance.addUserToRoom(userId,ws, parsedData.roomId)
   
       }
   
@@ -80,25 +80,23 @@ try {
           console.log("Invalid roomId type");
           return;
         }
-        instance.removeUserFromRoom(userId,parsedData.roomId
-  
-        )
+        instance.removeUserFromRoom(userId,ws,parsedData.roomId)
       }
   
       if(parsedData.type == "chat"){
         const roomId = parsedData.roomId;
         const message = parsedData.message;
   
-        const roomUsers = instance.getUsersInRoom(roomId)
-  
-        roomUsers.forEach(user=>{
-          user.ws.send(JSON.stringify({
-            type : "chat",
+        const roomWebSocket = instance.getUsersInRoom(roomId)
+        
+        roomWebSocket.forEach(ws=>{
+          ws.send(JSON.stringify({
+            type:"chat",
             message:message
           }))
         })
+       
       }
-  
   
 } catch (error) {
   console.log(error)
