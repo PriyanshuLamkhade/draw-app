@@ -84,6 +84,10 @@ export class stateManger {
             console.log("Socket not found")
             return
         }
+        if(userSocket.has(roomId)){
+            console.log("User is already joined")
+            return
+        }
         userSocket.add(roomId)
         console.log(`User ${userId} with this socket joined room ${roomId}`);
         return

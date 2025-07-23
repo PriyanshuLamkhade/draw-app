@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/statemanager.ts"],"version":"5.8.3"}
+{"root":["./src/index.ts","./src/producer.ts","./src/statemanager.ts","./src/worker.ts"],"version":"5.8.3"}

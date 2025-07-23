@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { JWT_SECRET } from "@repo/backend-common/config"
 import { instance } from './stateManager';
 import { prismaClient } from "@repo/db/db";
+import { chatProducer } from './producer';
 const wss = new WebSocketServer({ port: 8080 });
 
 function checkUser(token: string): string | null {
@@ -86,15 +87,23 @@ try {
       if(parsedData.type == "chat"){
         const roomId = parsedData.roomId;
         const message = parsedData.message;
-  
+
         const roomWebSocket = instance.getUsersInRoom(roomId)
-        
-        roomWebSocket.forEach(ws=>{
-          ws.send(JSON.stringify({
-            type:"chat",
-            message:message
-          }))
-        })
+
+        const found = roomWebSocket.find((element) => element == ws);
+        if(!found) {
+          console.log("Socket not connected, cannot send message")
+          return
+        }
+         chatProducer(roomId,message,userId)
+
+          roomWebSocket.forEach(ws=>{
+            ws.send(JSON.stringify({
+              type:"chat",
+              message:message
+            }))
+          
+          })
        
       }
   
