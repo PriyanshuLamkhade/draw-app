@@ -15,28 +15,15 @@ console.log("Worker process started");
                   }
               })
           console.log("DB write complete");
-          
-         
+     
       } catch (error) {
         console.error(error)
       }
-
     },{
   connection: { host: "127.0.0.1", port: 6379 }
 }) 
 
-chatWorker.on("failed", (job, err) => {
-    if(job==undefined)
-{
-    console.log("job un")
-    return
-}
-  console.error(`Job failed ${job.id}:`, err);
-});
 
-chatWorker.on("error", (err) => {
-  console.error("Worker error:", err);
-});
 
 
 

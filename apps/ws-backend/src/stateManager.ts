@@ -55,13 +55,8 @@ export class stateManger {
                 console.log("New ws added to exsisting user")
 
             }
-
             return
-
         }
-
-
-
     }
     getUser(userId: string): User | undefined {
         //getting user by id and not by ws object
@@ -84,7 +79,7 @@ export class stateManger {
             console.log("Socket not found")
             return
         }
-        if(userSocket.has(roomId)){
+        if (userSocket.has(roomId)) {
             console.log("User is already joined")
             return
         }
