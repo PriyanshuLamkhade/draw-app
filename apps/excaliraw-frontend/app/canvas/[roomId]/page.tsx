@@ -1,19 +1,23 @@
 "use client"
+import { ToolBar } from "@/components/ToolBar"
+import { useEffect, useRef, useState } from "react"
 
-import { initDraw } from "@/draw"
-import { useEffect, useRef } from "react"
 
-export default function Canvas(){
-    const canvasRef=useRef<HTMLCanvasElement>(null)
+export default function Main() {
+    const[selectedTool,setSelectedTool] = useState("")
+    const canvasRef = useRef<HTMLCanvasElement>(null)
     useEffect(()=>{
         if(canvasRef.current){
+            const canvas = canvasRef.current
             
-            
-            initDraw(canvasRef.current)
-
+            const ctx = canvas.getContext("2d")
+            if(!ctx) return
         }
     },[canvasRef])
-    return <div>
-        <canvas ref={canvasRef} width={1600} height={1000}></canvas>
+    return <div className="w-[100vw] h-[100vh] overflow-hidden relative cursor bg-zinc-900">
+    
+        <canvas ref={canvasRef} className="w-[100vw] h-[100vh] absolute top-0 left-0 ">
+        </canvas>
+        <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool}/>
     </div>
 }
