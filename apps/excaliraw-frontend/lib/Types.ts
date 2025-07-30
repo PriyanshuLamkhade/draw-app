@@ -6,5 +6,15 @@ export type Ellipse = {
     draw(ctx: CanvasRenderingContext2D): void;
     x: number, y: number, radiusX: number, radiusY: number, rotation: number, strokeColor: string
 }
+export type Line = {
+    draw(ctx: CanvasRenderingContext2D): void;
+    x:number , y:number, x1:number, y1:number
+}
+export type Circle = {
+    draw(ctx: CanvasRenderingContext2D): void;
+     x:number , y:number, radius:number
 
-export type Shapes = Rectangle | Ellipse
+}
+
+
+export type Shapes = Rectangle | Ellipse | Line | Circle

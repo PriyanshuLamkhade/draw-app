@@ -1,7 +1,7 @@
 export function EllipseIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      width="24" height="24"
+      width="20" height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke={props.color}

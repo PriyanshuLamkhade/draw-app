@@ -1,4 +1,6 @@
+import { CircleClass } from "./CircleClass";
 import { EllipseClass } from "./EllipseClass";
+import { LineClass } from "./LineClass";
 import { RectangleClass } from "./RectangleClass";
 import { Shapes } from "./Types";
 
@@ -51,16 +53,31 @@ export class CanvasClass {
             const rect = new RectangleClass(this.startX, this.startY, width, height, "white")
             this.Shapes.push(rect)
         }
+        if (this.selectedTool === "circle") {
+            const centerX = this.startX + width / 2;
+            const centerY = this.startY + height / 2;
+            const dx = e.offsetX - centerX;
+            const dy = e.offsetY - centerY;
+            const radius = Math.sqrt(dx * dx + dy * dy);
+            const circle = new CircleClass(centerX, centerY, radius, "white")
+            this.Shapes.push(circle)
+
+
+        }
         if (this.selectedTool == "ellipse") {
             const radiusX = Math.abs(width) / 2;
             const radiusY = Math.abs(height) / 2;
-            const centerX = this.startX + width / 2;  
+            const centerX = this.startX + width / 2;
             const centerY = this.startY + height / 2;
-            
-            const rotation = 0; 
+
+            const rotation = 0;
 
             const ellipse = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, "white")
             this.Shapes.push(ellipse)
+        }
+        if (this.selectedTool === "line") {
+            const line = new LineClass(this.startX, this.startY, e.offsetX, e.offsetY, "white")
+            this.Shapes.push(line)
         }
     }
 
@@ -73,16 +90,29 @@ export class CanvasClass {
                 const rectInstance = new RectangleClass(this.startX, this.startY, width, height, "white")
                 rectInstance.draw(this.ctx)
             }
+            if (this.selectedTool === "circle") {
+                const centerX = this.startX + width / 2;
+                const centerY = this.startY + height / 2;
+                const dx = e.offsetX - centerX;
+                const dy = e.offsetY - centerY;
+                const radius = Math.sqrt(dx * dx + dy * dy);
+                const circleInstance = new CircleClass(centerX, centerY, radius, "white")
+                circleInstance.draw(this.ctx)
+            }
             if (this.selectedTool === "ellipse") {
                 const radiusX = Math.abs(width) / 2;
                 const radiusY = Math.abs(height) / 2;
-                const centerX = this.startX + width / 2; 
+                const centerX = this.startX + width / 2;
                 const centerY = this.startY + height / 2;
 
-                const rotation = 0; 
+                const rotation = 0;
 
                 const ellipseInstance = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, "white")
                 ellipseInstance.draw(this.ctx)
+            }
+            if (this.selectedTool === "line") {
+                const lineInstance = new LineClass(this.startX, this.startY, e.offsetX, e.offsetY, "white")
+                lineInstance.draw(this.ctx)
             }
 
         }

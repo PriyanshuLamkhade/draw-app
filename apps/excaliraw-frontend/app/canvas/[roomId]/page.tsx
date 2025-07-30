@@ -25,7 +25,7 @@ export default function Main() {
 
   return (
     <div className="w-[100vw] h-[100vh] overflow-hidden relative cursor bg-zinc-900">
-      <canvas ref={canvasRef} className="absolute top-0 left-0" />
+      <canvas ref={canvasRef} className="absolute top-0 left-0 " />
       <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool} />
     </div>
   )
