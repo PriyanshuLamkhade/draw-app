@@ -17,7 +17,7 @@ export default function Main() {
       instance.addHandlers()
     }
   }, [])
-
+  
   useEffect(() => {
     // update selected tool inside class
     canvasInstanceRef.current?.setSelectedTool(selectedTool)

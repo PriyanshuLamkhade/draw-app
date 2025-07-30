@@ -15,6 +15,7 @@ export class RectangleClass extends ElementClass
         ctx.lineWidth = 1 //can add later
 
         ctx.strokeRect(this.x, this.y, this.width, this.height);
+        
     }
     isHit(x: number, y: number): boolean {
         return (

@@ -1,13 +1,11 @@
+import { EllipseClass } from "./EllipseClass";
 import { RectangleClass } from "./RectangleClass";
-interface DrawAble {
-    draw(ctx: CanvasRenderingContext2D): void;
-    x: number, y: number, width: number, height: number, strokeColor: string
-}
+import { Shapes } from "./Types";
 
 export class CanvasClass {
     private canvas: HTMLCanvasElement
     private ctx: CanvasRenderingContext2D
-    private Shapes: DrawAble[] = []
+    private Shapes: Shapes[] = []
     clicked = false
     startX = 0
     startY = 0
@@ -35,6 +33,7 @@ export class CanvasClass {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.Shapes.forEach(el => el.draw(this.ctx));
     }
+
     private handleMouseDown = (e: MouseEvent) => {
         this.clicked = true
         this.startX = e.offsetX
@@ -52,6 +51,17 @@ export class CanvasClass {
             const rect = new RectangleClass(this.startX, this.startY, width, height, "white")
             this.Shapes.push(rect)
         }
+        if (this.selectedTool == "ellipse") {
+            const radiusX = Math.abs(width) / 2;
+            const radiusY = Math.abs(height) / 2;
+            const centerX = this.startX + width / 2;  
+            const centerY = this.startY + height / 2;
+            
+            const rotation = 0; 
+
+            const ellipse = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, "white")
+            this.Shapes.push(ellipse)
+        }
     }
 
     private handleMouseMove = (e: MouseEvent) => {
@@ -63,6 +73,18 @@ export class CanvasClass {
                 const rectInstance = new RectangleClass(this.startX, this.startY, width, height, "white")
                 rectInstance.draw(this.ctx)
             }
+            if (this.selectedTool === "ellipse") {
+                const radiusX = Math.abs(width) / 2;
+                const radiusY = Math.abs(height) / 2;
+                const centerX = this.startX + width / 2; 
+                const centerY = this.startY + height / 2;
+
+                const rotation = 0; 
+
+                const ellipseInstance = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, "white")
+                ellipseInstance.draw(this.ctx)
+            }
+
         }
     }
     // ------------------------- Event Handlers --------------------
@@ -71,6 +93,6 @@ export class CanvasClass {
         this.canvas.addEventListener("mousemove", this.handleMouseMove);
         this.canvas.addEventListener("mouseup", this.handleMouseUp);
     }
-    
+
 
 }
