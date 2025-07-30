@@ -68,7 +68,7 @@ export class stateManger {
             return findUser
         }
     }
-    addUserToRoom(userId: string, ws: WebSocket, roomId: number): void {
+    (userId: string, ws: WebSocket, roomId: number): void {
         const user = instance.getUser(userId);
         if (user == undefined) {
             console.log("User Not Found")
@@ -101,7 +101,7 @@ export class stateManger {
             rooms.delete(roomId);
             console.log("User left")
         }
-    }
+    }addUserToRoom
     getUsersInRoom(roomId: number): WebSocket[] {
         const webSocketsInRoom: WebSocket[] = []
         for (const user of this.users.values()) {
