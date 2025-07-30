@@ -15,6 +15,11 @@ export type Circle = {
      x:number , y:number, radius:number
 
 }
+export type Freehand = {
+  draw(ctx: CanvasRenderingContext2D): void;
+  points: { x: number; y: number }[];
+  strokeColor: string;
+};
 
 
-export type Shapes = Rectangle | Ellipse | Line | Circle
+export type Shapes = Rectangle | Ellipse | Line | Circle | Freehand

@@ -1,5 +1,6 @@
 import { CircleClass } from "./CircleClass";
 import { EllipseClass } from "./EllipseClass";
+import { FreehandClass } from "./FreeHandClass";
 import { LineClass } from "./LineClass";
 import { RectangleClass } from "./RectangleClass";
 import { Shapes } from "./Types";
@@ -12,7 +13,7 @@ export class CanvasClass {
     startX = 0
     startY = 0
     private selectedTool: string
-
+    private currentStroke: { x: number; y: number }[] = [];
 
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is null");
@@ -40,6 +41,11 @@ export class CanvasClass {
         this.clicked = true
         this.startX = e.offsetX
         this.startY = e.offsetY
+        if (this.selectedTool === "pencile") {
+            this.currentStroke = [{ x: e.offsetX, y: e.offsetY }];
+            this.ctx.beginPath()
+            this.ctx.moveTo(this.startX, this.startY)
+        }
     }
 
     private handleMouseUp = (e: MouseEvent) => {
@@ -47,6 +53,10 @@ export class CanvasClass {
 
         const width = e.offsetX - this.startX
         const height = e.offsetY - this.startY
+        if (this.selectedTool === "pencile") {
+            const stroke = new FreehandClass(this.currentStroke, "white");
+            this.Shapes.push(stroke);
+        }
 
         if (this.selectedTool == "rectangle") {
 
@@ -86,6 +96,14 @@ export class CanvasClass {
             const width = e.offsetX - this.startX
             const height = e.offsetY - this.startY
             this.drawAll();
+            if (this.clicked && this.selectedTool === "pencile") {
+                 this.currentStroke.push({ x: e.offsetX, y: e.offsetY });
+                this.drawAll(); // redraw existing shapes
+
+                const tempStroke = new FreehandClass(this.currentStroke, "white");
+                tempStroke.draw(this.ctx); // draw the current live stroke
+
+            }
             if (this.selectedTool === "rectangle") {
                 const rectInstance = new RectangleClass(this.startX, this.startY, width, height, "white")
                 rectInstance.draw(this.ctx)
