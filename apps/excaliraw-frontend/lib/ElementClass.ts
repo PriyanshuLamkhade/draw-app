@@ -1,4 +1,4 @@
-abstract class ElementClass {
+export abstract class ElementClass {
     strokeColor: string;
     x: number;
     y: number;

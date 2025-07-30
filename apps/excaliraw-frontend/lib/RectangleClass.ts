@@ -1,4 +1,8 @@
-class RectangleClass extends ElementClass {
+import { ElementClass } from "./ElementClass";
+
+
+export class RectangleClass extends ElementClass
+ {
     width: number;
     height: number;
     constructor(x: number, y: number, width: number, height: number, strokeColor: string) {
