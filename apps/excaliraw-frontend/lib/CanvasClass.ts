@@ -14,7 +14,7 @@ export class CanvasClass {
     startY = 0
     private selectedTool: string
     private currentStroke: { x: number; y: number }[] = [];
-
+    private strokeColor
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is null");
 
@@ -22,14 +22,18 @@ export class CanvasClass {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         this.selectedTool = "rectangle"
+        this.strokeColor = "#FFFFFF"
         const ctx = canvas.getContext("2d")
         if (!ctx) throw new Error("Unable to get 2D context");
         this.ctx = ctx
 
         this.drawAll()
     }
-    setSelectedTool(selectedToolTool: string) {
-        this.selectedTool = selectedToolTool
+    setSelectedTool(selectedTool: string) {
+        this.selectedTool = selectedTool
+    }
+    setStrokeColor(strokeColor:string){
+        this.strokeColor = strokeColor
     }
 
     drawAll() {
@@ -54,13 +58,13 @@ export class CanvasClass {
         const width = e.offsetX - this.startX
         const height = e.offsetY - this.startY
         if (this.selectedTool === "pencile") {
-            const stroke = new FreehandClass(this.currentStroke, "white");
+            const stroke = new FreehandClass(this.currentStroke, this.strokeColor);
             this.Shapes.push(stroke);
         }
 
         if (this.selectedTool == "rectangle") {
 
-            const rect = new RectangleClass(this.startX, this.startY, width, height, "white")
+            const rect = new RectangleClass(this.startX, this.startY, width, height, this.strokeColor)
             this.Shapes.push(rect)
         }
         if (this.selectedTool === "circle") {
@@ -69,7 +73,7 @@ export class CanvasClass {
             const dx = e.offsetX - centerX;
             const dy = e.offsetY - centerY;
             const radius = Math.sqrt(dx * dx + dy * dy);
-            const circle = new CircleClass(centerX, centerY, radius, "white")
+            const circle = new CircleClass(centerX, centerY, radius, this.strokeColor)
             this.Shapes.push(circle)
 
 
@@ -82,11 +86,11 @@ export class CanvasClass {
 
             const rotation = 0;
 
-            const ellipse = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, "white")
+            const ellipse = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, this.strokeColor)
             this.Shapes.push(ellipse)
         }
         if (this.selectedTool === "line") {
-            const line = new LineClass(this.startX, this.startY, e.offsetX, e.offsetY, "white")
+            const line = new LineClass(this.startX, this.startY, e.offsetX, e.offsetY, this.strokeColor)
             this.Shapes.push(line)
         }
     }
@@ -100,12 +104,12 @@ export class CanvasClass {
                  this.currentStroke.push({ x: e.offsetX, y: e.offsetY });
                 this.drawAll(); // redraw existing shapes
 
-                const tempStroke = new FreehandClass(this.currentStroke, "white");
+                const tempStroke = new FreehandClass(this.currentStroke, this.strokeColor);
                 tempStroke.draw(this.ctx); // draw the current live stroke
 
             }
             if (this.selectedTool === "rectangle") {
-                const rectInstance = new RectangleClass(this.startX, this.startY, width, height, "white")
+                const rectInstance = new RectangleClass(this.startX, this.startY, width, height, this.strokeColor)
                 rectInstance.draw(this.ctx)
             }
             if (this.selectedTool === "circle") {
@@ -114,7 +118,7 @@ export class CanvasClass {
                 const dx = e.offsetX - centerX;
                 const dy = e.offsetY - centerY;
                 const radius = Math.sqrt(dx * dx + dy * dy);
-                const circleInstance = new CircleClass(centerX, centerY, radius, "white")
+                const circleInstance = new CircleClass(centerX, centerY, radius, this.strokeColor)
                 circleInstance.draw(this.ctx)
             }
             if (this.selectedTool === "ellipse") {
@@ -125,11 +129,11 @@ export class CanvasClass {
 
                 const rotation = 0;
 
-                const ellipseInstance = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, "white")
+                const ellipseInstance = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, this.strokeColor)
                 ellipseInstance.draw(this.ctx)
             }
             if (this.selectedTool === "line") {
-                const lineInstance = new LineClass(this.startX, this.startY, e.offsetX, e.offsetY, "white")
+                const lineInstance = new LineClass(this.startX, this.startY, e.offsetX, e.offsetY, this.strokeColor)
                 lineInstance.draw(this.ctx)
             }
 
