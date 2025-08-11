@@ -1,5 +1,5 @@
 import { IconButton } from "./IconButton";
-import {Circle, LucideHand, LucideMousePointer, Minus, Pencil, RectangleHorizontal} from 'lucide-react'
+import {Circle, ImagePlusIcon, LucideHand, LucideMousePointer, Minus, Pencil, RectangleHorizontal} from 'lucide-react'
 import { EllipseIcon } from "@/Icons/EllipseIcon";
 interface ToolBarInterface{
     selectedTool:string,
@@ -19,6 +19,8 @@ export function ToolBar({selectedTool,setSelectedTool,setBoxClicked}:ToolBarInte
             <IconButton gotClicked={selectedTool == "circle" ? " bg-slate-900" : "hover:bg-gray-500"} icon={<Circle color="white" size={20} />} onClick={()=>{setSelectedTool("circle")}}/>
             <IconButton gotClicked={selectedTool == "ellipse" ? " bg-slate-900" : "hover:bg-gray-500"} icon={<EllipseIcon color="white"/>} onClick={()=>{setSelectedTool("ellipse")}}/>
             <IconButton gotClicked={selectedTool == "line" ? " bg-slate-900" : "hover:bg-gray-500"} icon={<Minus color="white" size={20}/>} onClick={()=>{setSelectedTool("line")}}/>
+            <IconButton gotClicked={selectedTool == "img" ? " bg-slate-900" : "hover:bg-gray-500"} icon={<ImagePlusIcon color="white" size={20}/>} onClick={()=>{setSelectedTool("img")}}/>
+
         
         </div>
     )

@@ -1,6 +1,7 @@
 import { CircleClass } from "./CircleClass";
 import { EllipseClass } from "./EllipseClass";
 import { FreehandClass } from "./FreeHandClass";
+import { ImageClass } from "./ImageClass";
 import { LineClass } from "./LineClass";
 import { RectangleClass } from "./RectangleClass";
 import { Shapes } from "./Types";
@@ -9,19 +10,22 @@ export class CanvasClass {
     private canvas: HTMLCanvasElement
     private ctx: CanvasRenderingContext2D
     private Shapes: Shapes[] = []
+    private Images : ImageClass[] = []
     clicked = false
     startX = 0
     startY = 0
     private selectedTool: string
     private currentStroke: { x: number; y: number }[] = [];
     private strokeColor
+    private src:string | undefined
+    
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is null");
 
         this.canvas = canvas
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        this.selectedTool = "rectangle"
+        this.selectedTool = "rectangle" 
         this.strokeColor = "#FFFFFF"
         const ctx = canvas.getContext("2d")
         if (!ctx) throw new Error("Unable to get 2D context");
@@ -29,16 +33,23 @@ export class CanvasClass {
 
         this.drawAll()
     }
+    setFiles(fileList: any[]) {
+    this.Images = fileList.map(file => 
+        new ImageClass(200, 200, file.preview, 50, 50, () => this.drawAll())
+
+    );
+}
     setSelectedTool(selectedTool: string) {
         this.selectedTool = selectedTool
     }
     setStrokeColor(strokeColor:string){
         this.strokeColor = strokeColor
     }
-
+   
     drawAll() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.Shapes.forEach(el => el.draw(this.ctx));
+        this.Images.forEach(el => el.draw(this.ctx));
     }
 
     private handleMouseDown = (e: MouseEvent) => {
@@ -100,6 +111,7 @@ export class CanvasClass {
             const width = e.offsetX - this.startX
             const height = e.offsetY - this.startY
             this.drawAll();
+             
             if (this.clicked && this.selectedTool === "pencile") {
                  this.currentStroke.push({ x: e.offsetX, y: e.offsetY });
                 this.drawAll(); // redraw existing shapes

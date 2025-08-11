@@ -23,3 +23,5 @@ export type Freehand = {
 
 
 export type Shapes = Rectangle | Ellipse | Line | Circle | Freehand
+
+
