@@ -16,15 +16,16 @@ export class LineClass extends ElementClass
         this.y1 = y1
         
     }
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number): void {
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = 1 //can add later
-    
+    ctx.save();
+        ctx.translate(panOffsetX, panOffsetY)
         ctx.beginPath()
         ctx.moveTo(this.x,this.y)
         ctx.lineTo(this.x1,this.y1)
         ctx.stroke();
-        
+        ctx.restore()
     }
     isHit(x: number, y: number): boolean {
         return (

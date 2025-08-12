@@ -15,14 +15,15 @@ export class EllipseClass extends ElementClass {
         this.radiusY = radiusY
         this.rotation = rotation
     }
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number): void {
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = 1 //can add later
-        
+        ctx.save();
+        ctx.translate(panOffsetX, panOffsetY)
         ctx.beginPath()
         ctx.ellipse(this.x, this.y, this.radiusX, this.radiusY, this.rotation, this.startAngle, this.endAngle)
         ctx.stroke()
-
+        ctx.restore()
     }
     isHit(testX: number, testY: number): boolean {
         const dx = testX - this.x;

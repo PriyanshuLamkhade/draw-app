@@ -36,9 +36,13 @@ export class ImageClass {
         };
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number): void {
         if (this.isLoaded) {
+            ctx.save();
+        ctx.translate(panOffsetX, panOffsetY)
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+            ctx.restore()
         }
+
     }
 }

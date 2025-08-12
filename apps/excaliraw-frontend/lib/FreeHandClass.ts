@@ -9,7 +9,9 @@ export class FreehandClass extends ElementClass {
     this.points = points;
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number): void {
+    ctx.save();
+    ctx.translate(panOffsetX, panOffsetY)
     if (this.points.length < 2) return;
 
     ctx.beginPath();
@@ -23,6 +25,7 @@ export class FreehandClass extends ElementClass {
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.closePath();
+    ctx.restore()
   }
 
   isHit(x: number, y: number): boolean {

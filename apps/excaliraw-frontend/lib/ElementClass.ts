@@ -8,7 +8,7 @@ export abstract class ElementClass {
     this.strokeColor = strokeColor;
   }
 
-  abstract draw(ctx:CanvasRenderingContext2D):void 
+  abstract draw(ctx:CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number):void 
 
   abstract isHit(x:number, y:number):boolean  
 }

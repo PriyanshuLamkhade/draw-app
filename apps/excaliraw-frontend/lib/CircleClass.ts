@@ -12,13 +12,15 @@ export class CircleClass extends ElementClass {
         this.radius = radius
 
     }
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number): void {
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = 1 //can add later
-        
+        ctx.save();
+        ctx.translate(panOffsetX, panOffsetY)
         ctx.beginPath()
         ctx.arc(this.x,this.y,this.radius,this.startAngle,this.endAngle)
         ctx.stroke()
+        ctx.restore()
 
     }
     isHit(testX: number, testY: number): boolean {
