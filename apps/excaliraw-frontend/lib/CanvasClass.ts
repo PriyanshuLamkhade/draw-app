@@ -21,8 +21,8 @@ export class CanvasClass {
     private src: string | undefined
     clientX = 0;
     clientY = 0;
-    startPanMousePosition={ x: 0, y: 0 }
-     previousTool= ""
+    startPanMousePosition = { x: 0, y: 0 }
+    previousTool = ""
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is null");
 
@@ -56,20 +56,20 @@ export class CanvasClass {
     }
     setSelectedTool(selectedTool: string) {
         this.selectedTool = selectedTool
-         switch (selectedTool) {
-        case "pencile":
-        case "rectangle":
-        case "circle":
-        case "ellipse":
-        case "line":
-            this.canvas.style.cursor = "crosshair";
-            break;
-        case "hand":
-            this.canvas.style.cursor = "grab";
-            break;
-        default:
-            this.canvas.style.cursor = "default";
-    }
+        switch (selectedTool) {
+            case "pencile":
+            case "rectangle":
+            case "circle":
+            case "ellipse":
+            case "line":
+                this.canvas.style.cursor = "crosshair";
+                break;
+            case "hand":
+                this.canvas.style.cursor = "grab";
+                break;
+            default:
+                this.canvas.style.cursor = "default";
+        }
     }
     setStrokeColor(strokeColor: string) {
         this.strokeColor = strokeColor
@@ -82,18 +82,16 @@ export class CanvasClass {
     private handleMouseDown = (e: MouseEvent) => {
         this.clicked = true
         this.getMousePosition(e)
-        if(e.button === 1 ){
-            
-                this.previousTool = this.selectedTool
-            
-            
+        if (e.button === 1 || this.selectedTool === "hand") {
+
+            this.previousTool = this.selectedTool
             this.setSelectedTool("hand")
-            this.canvas.style.cursor = "grabbing"; 
+            this.canvas.style.cursor = "grabbing";
             this.startPanMousePosition.x = this.clientX;
-            this.startPanMousePosition.y = this.clientY; 
-            
+            this.startPanMousePosition.y = this.clientY;
+
         }
-        
+
         this.startX = this.clientX
         this.startY = this.clientY
         if (this.selectedTool === "pencile") {
@@ -106,14 +104,14 @@ export class CanvasClass {
     private handleMouseUp = (e: MouseEvent) => {
         this.getMousePosition(e)
         this.clicked = false
-        if(e.button == 1){
+        if (e.button == 1) {
             this.canvas.style.cursor = this.previousTool;
             this.setSelectedTool(this.previousTool)
         }
-        if(e.button == 0 && this.selectedTool == 'hand'){
+        if (e.button == 0 && this.selectedTool == 'hand') {
             this.setSelectedTool("hand")
         }
-        
+
         const width = this.clientX - this.startX
         const height = this.clientY - this.startY
         if (this.selectedTool === "pencile") {
@@ -158,18 +156,19 @@ export class CanvasClass {
     private handleMouseMove = (e: MouseEvent) => {
         this.getMousePosition(e)
         if (this.clicked) {
-            if(this.selectedTool==="hand"){
+            if (this.selectedTool === "hand") {
                 this.canvas.style.cursor = "grabbing";
                 const deltaX = this.clientX - this.startPanMousePosition.x
                 const deltaY = this.clientY - this.startPanMousePosition.y
 
                 this.panOffset.x += deltaX;
-                this.panOffset.y += deltaY 
+                this.panOffset.y += deltaY
+
             }
             const width = this.clientX - this.startX
             const height = this.clientY - this.startY
             this.drawAll();
-            
+
             if (this.clicked && this.selectedTool === "pencile") {
                 this.currentStroke.push({ x: this.clientX, y: this.clientY });
                 this.drawAll(); // redraw existing shapes
@@ -214,12 +213,12 @@ export class CanvasClass {
 
     }
     private panFuntion = (e: any) => {
-         e.preventDefault();
+        e.preventDefault();
         if (e.shiftKey) {
 
             this.panOffset.x -= e.deltaY;
         } else {
-            
+
             this.panOffset.y -= e.deltaY;
             this.panOffset.x -= e.deltaX;
         }
@@ -229,7 +228,7 @@ export class CanvasClass {
 
     // ------------------------- Event Handlers --------------------
     addHandlers() {
-        this.canvas.addEventListener("wheel", this.panFuntion,{ passive: false });
+        this.canvas.addEventListener("wheel", this.panFuntion, { passive: false });
         this.canvas.addEventListener("mousedown", this.handleMouseDown);
         this.canvas.addEventListener("mousemove", this.handleMouseMove);
         this.canvas.addEventListener("mouseup", this.handleMouseUp);
