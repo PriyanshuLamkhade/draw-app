@@ -21,7 +21,7 @@ export class CanvasClass {
     private src: string | undefined
     clientX = 0;
     clientY = 0;
-
+    startPanMousePosition={ x: 0, y: 0 }
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is null");
 
@@ -33,17 +33,17 @@ export class CanvasClass {
         const ctx = canvas.getContext("2d")
         if (!ctx) throw new Error("Unable to get 2D context");
         this.ctx = ctx
-         this.ctx.save();
+        this.ctx.save();
         this.ctx.translate(this.panOffset.x, this.panOffset.y)
-this.ctx.restore();
+        this.ctx.restore();
         this.drawAll()
     }
     drawAll() {
         this.ctx.save();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.Shapes.forEach(el => el.draw(this.ctx,this.panOffset.x, this.panOffset.y));
-        this.Images.forEach(el => el.draw(this.ctx,this.panOffset.x, this.panOffset.y));
+        this.Shapes.forEach(el => el.draw(this.ctx, this.panOffset.x, this.panOffset.y));
+        this.Images.forEach(el => el.draw(this.ctx, this.panOffset.x, this.panOffset.y));
         this.ctx.restore();
     }
     setFiles(fileList: any[]) {
@@ -58,14 +58,21 @@ this.ctx.restore();
     setStrokeColor(strokeColor: string) {
         this.strokeColor = strokeColor
     }
-    private getMousPosition(e: MouseEvent) {
+    private getMousePosition(e: MouseEvent) {
         this.clientX = e.clientX - this.panOffset.x
         this.clientY = e.clientY - this.panOffset.y
     }
 
     private handleMouseDown = (e: MouseEvent) => {
-        this.getMousPosition(e)
         this.clicked = true
+        this.getMousePosition(e)
+        if(e.button === 1 || this.selectedTool == "hand"){
+            this.setSelectedTool("hand")
+            this.startPanMousePosition.x = this.clientX;
+            this.startPanMousePosition.y = this.clientY; 
+            
+        }
+        
         this.startX = this.clientX
         this.startY = this.clientY
         if (this.selectedTool === "pencile") {
@@ -76,8 +83,11 @@ this.ctx.restore();
     }
 
     private handleMouseUp = (e: MouseEvent) => {
-        this.getMousPosition(e)
+        this.getMousePosition(e)
         this.clicked = false
+        if(this.selectedTool==="hand"){
+            this.canvas.style.cursor = "grab";
+        }
         const width = this.clientX - this.startX
         const height = this.clientY - this.startY
         if (this.selectedTool === "pencile") {
@@ -116,28 +126,37 @@ this.ctx.restore();
             const line = new LineClass(this.startX, this.startY, this.clientX, this.clientY, this.strokeColor)
             this.Shapes.push(line)
         }
+        this.drawAll();
     }
 
     private handleMouseMove = (e: MouseEvent) => {
-        this.getMousPosition(e)
+        this.getMousePosition(e)
         if (this.clicked) {
+            if(this.selectedTool==="hand"){
+                const deltaX = this.clientX - this.startPanMousePosition.x
+                const deltaY = this.clientY - this.startPanMousePosition.y
+
+                this.panOffset.x += deltaX;
+                this.panOffset.y += deltaY 
+                this.canvas.style.cursor = "grabbing";
+            }
             const width = this.clientX - this.startX
             const height = this.clientY - this.startY
             this.drawAll();
-
+            
             if (this.clicked && this.selectedTool === "pencile") {
                 this.currentStroke.push({ x: this.clientX, y: this.clientY });
                 this.drawAll(); // redraw existing shapes
 
                 const tempStroke = new FreehandClass(this.currentStroke, this.strokeColor);
-                tempStroke.draw(this.ctx,this.panOffset.x, this.panOffset.y); // draw the current live stroke
+                tempStroke.draw(this.ctx, this.panOffset.x, this.panOffset.y); // draw the current live stroke
 
             }
             if (this.selectedTool === "rectangle") {
                 const rectInstance = new RectangleClass(this.startX, this.startY, width, height, this.strokeColor);
                 // this.ctx.save();
                 // this.ctx.translate(this.panOffset.x, this.panOffset.y);
-                rectInstance.draw(this.ctx,this.panOffset.x, this.panOffset.y);
+                rectInstance.draw(this.ctx, this.panOffset.x, this.panOffset.y);
                 // this.ctx.restore();
             }
             if (this.selectedTool === "circle") {
@@ -147,7 +166,7 @@ this.ctx.restore();
                 const dy = this.clientY - centerY;
                 const radius = Math.sqrt(dx * dx + dy * dy);
                 const circleInstance = new CircleClass(centerX, centerY, radius, this.strokeColor)
-                circleInstance.draw(this.ctx,this.panOffset.x, this.panOffset.y)
+                circleInstance.draw(this.ctx, this.panOffset.x, this.panOffset.y)
             }
             if (this.selectedTool === "ellipse") {
                 const radiusX = Math.abs(width) / 2;
@@ -158,22 +177,33 @@ this.ctx.restore();
                 const rotation = 0;
 
                 const ellipseInstance = new EllipseClass(centerX, centerY, radiusX, radiusY, rotation, this.strokeColor)
-                ellipseInstance.draw(this.ctx,this.panOffset.x, this.panOffset.y)
+                ellipseInstance.draw(this.ctx, this.panOffset.x, this.panOffset.y)
             }
             if (this.selectedTool === "line") {
                 const lineInstance = new LineClass(this.startX, this.startY, this.clientX, this.clientY, this.strokeColor)
-                lineInstance.draw(this.ctx,this.panOffset.x, this.panOffset.y)
+                lineInstance.draw(this.ctx, this.panOffset.x, this.panOffset.y)
             }
 
         }
-        
+
     }
-    private panFuntion = (e:any)=>{
-        console.log(e)
+    private panFuntion = (e: any) => {
+         e.preventDefault();
+        if (e.shiftKey) {
+
+            this.panOffset.x -= e.deltaY;
+        } else {
+            
+            this.panOffset.y -= e.deltaY;
+            this.panOffset.x -= e.deltaX;
+        }
+
+        this.drawAll()
     }
+
     // ------------------------- Event Handlers --------------------
     addHandlers() {
-        this.canvas.addEventListener("wheel", this.panFuntion);
+        this.canvas.addEventListener("wheel", this.panFuntion,{ passive: false });
         this.canvas.addEventListener("mousedown", this.handleMouseDown);
         this.canvas.addEventListener("mousemove", this.handleMouseMove);
         this.canvas.addEventListener("mouseup", this.handleMouseUp);
