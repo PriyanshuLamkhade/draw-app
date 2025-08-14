@@ -49,8 +49,8 @@ export default function Main() {
     <div  className="w-[100vw] h-[100vh] overflow-hidden relative cursor bg-zinc-900 ">
       <canvas ref={canvasRef} className={`absolute top-0 left-0 ${cursorType}`}  />
       <div className="fixed ">
-      <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool}  setBoxClicked={setBoxClicked} />
-      <ColorPallet strokeColor={strokeColor} setStrokeColor={setStrokeColor} selectedTool={selectedTool} boxClicked = {boxClicked} setBoxClicked={setBoxClicked} />
+      <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool}  setBoxClicked={setBoxClicked} strokeColor={strokeColor} setStrokeColor={setStrokeColor} boxClicked = {boxClicked}  />
+      {/* <ColorPallet strokeColor={strokeColor} setStrokeColor={setStrokeColor} selectedTool={selectedTool} boxClicked = {boxClicked} setBoxClicked={setBoxClicked} /> */}
       <ImageDrop files={files}  setFiles={setFiles} selectedTool={selectedTool} />
       
       </div>

@@ -20,7 +20,7 @@ export function ColorPallet({
   return (
     <div>
       <div
-        className={`bg-zinc-800 flex gap-4 px-4 py-2 rounded-b-lg w-77 ml-5 border border-t-0 border-zinc-700 ${
+        className={`bg-zinc-800 flex flex-col gap-4 px-4 py-2 rounded-b-lg w-77 ml-5 border border-t-0 border-zinc-700 ${
           selectedTool === "hand" || selectedTool === "mouse" || selectedTool === "img" ? "hidden" : ""
         }`}
       >
