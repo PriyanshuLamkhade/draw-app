@@ -18,9 +18,9 @@ export function ColorPallet({
   
 
   return (
-    <div className="flex ">
+    <div className="flex relative">
       <div
-        className={`bg-zinc-800 flex flex-col justify-evenly mt-10 px-4 py-2 rounded-lg border-l-0 max-h-72 border  border-black ${
+        className={`absolute top-10 bg-zinc-800 flex flex-col justify-evenly  px-4 py-2 rounded-lg border-l-0 min-h-72 border   border-black ${
           selectedTool === "hand" || selectedTool === "mouse" || selectedTool === "img" ? "hidden" : ""
         }`}
       >
@@ -51,7 +51,7 @@ export function ColorPallet({
       <div
         className={`${
           !boxClicked ? "hidden" : ""
-        } flex h-10 bg-white border border-zinc-700 rounded-md gap-1 p-1 justify-evenly self-end `}>
+        } flex h-10 bg-white border border-zinc-700 rounded-md gap-1 p-1 justify-evenly absolute top-80 `}>
         <input
           ref={colorRef}
           type="text"
