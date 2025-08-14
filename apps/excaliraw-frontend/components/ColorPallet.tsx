@@ -18,9 +18,9 @@ export function ColorPallet({
   
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <div
-        className={`bg-zinc-800 flex flex-col gap-3 px-4 py-2 rounded-lg border-l-0 ml-5 border border-t-0 border-zinc-700 ${
+        className={`bg-zinc-800 flex flex-col justify-evenly mt-10 px-4 py-2 rounded-lg border-l-0 max-h-72 border  border-black ${
           selectedTool === "hand" || selectedTool === "mouse" || selectedTool === "img" ? "hidden" : ""
         }`}
       >
@@ -41,7 +41,7 @@ export function ColorPallet({
             }}
           ></div>
         ))}
-        <p className="text-gray-400"><Minus color="white" /></p>
+        <p className="text-gray-400"><Minus color="gray" /></p>
         
         <div style={{ "--current-color": strokeColor } as React.CSSProperties}
           className="h-6 w-7 rounded border bg-[var(--current-color)] border-gray-600 hover:scale-110 cursor-pointer"
@@ -51,7 +51,7 @@ export function ColorPallet({
       <div
         className={`${
           !boxClicked ? "hidden" : ""
-        } flex h-10 bg-white border border-zinc-700 rounded-md gap-1 p-1 justify-evenly`}>
+        } flex h-10 bg-white border border-zinc-700 rounded-md gap-1 p-1 justify-evenly self-end `}>
         <input
           ref={colorRef}
           type="text"
