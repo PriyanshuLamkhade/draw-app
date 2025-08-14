@@ -35,12 +35,11 @@ const idCounter = useRef(0);
    
 
     return (
-        <div className={`${selectedTool === "img" ? `border border-blue-800 border-dashed m-2 mb-0 bg-zinc-800 rounded-xl 
-            p-2 px-4 flex gap-2 justify-around flex-wrap` : "hidden" }`}>
-            <div className="container">
-                <div {...getRootProps({ className: 'dropzone' })}>
+        <div className={`${selectedTool === "img" ? `border border-blue-800 border-dashed m-2  bg-zinc-800 rounded-xl 
+             px-4   ` : "hidden" }`}>
+                <div {...getRootProps({ className: 'dropzone h-full w-full   flex flex-col  justify-around' })}>
                     <input {...getInputProps()} />
-                    <p className="text-white">Drag 'n' drop some files here</p>
+                    <p className="text-white ">Drag 'n' drop some files here</p>
                     <button
                         type="button"
                         className="cursor-pointer bg-blue-600 text-white px-3 py-1 rounded mt-2"
@@ -51,7 +50,6 @@ const idCounter = useRef(0);
                 </div>
 
 
-            </div>
         </div>
     );
 }

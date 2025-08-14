@@ -3,6 +3,7 @@ import { Circle, ImagePlusIcon, LucideHand, LucideMousePointer, Menu, Minus, Mov
 import { EllipseIcon } from "@/Icons/EllipseIcon";
 import { ColorPallet } from "./ColorPallet";
 import { useRef } from "react";
+import { ImageDrop } from "./ImageDrop";
 interface ToolBarInterface {
   selectedTool: string,
   setSelectedTool: (a: string) => void,
@@ -10,20 +11,21 @@ interface ToolBarInterface {
   strokeColor: string
   setStrokeColor: (a: string) => void,
   boxClicked: boolean
-
+files:any[]  
+setFiles:any
 }
 
 
-export function ToolBar({ selectedTool, setSelectedTool, setBoxClicked, strokeColor, setStrokeColor, boxClicked }: ToolBarInterface) {
+export function ToolBar({ selectedTool, setSelectedTool, setBoxClicked, strokeColor, setStrokeColor, boxClicked,files,setFiles }: ToolBarInterface) {
 
   const toolBarRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const startX = useRef(0);
   const startY = useRef(0);
 
-  return (<div ref={toolBarRef} className="flex  absolute   top-20 left-7">
+  return (<div ref={toolBarRef} className="flex  absolute  top-20 left-7">
 
-    <div className=" border border-black max-w-[50vmax]    bg-zinc-800 rounded-xl p-2 items-center flex gap-2 justify-between flex-col "
+    <div className=" border border-black max-w-[50vmax]  bg-zinc-800 rounded-xl p-2 items-center flex gap-2 justify-between flex-col "
       onClick={() => setBoxClicked(false)}>
       <div className="bg-zinc-800 -translate-y-5 rounded-t-md py-1 px-3 border-b-0 border border-black cursor-move"
         onMouseDown={toolBarStart}
@@ -41,6 +43,7 @@ export function ToolBar({ selectedTool, setSelectedTool, setBoxClicked, strokeCo
 
     </div>
     <ColorPallet strokeColor={strokeColor} setStrokeColor={setStrokeColor} selectedTool={selectedTool} boxClicked={boxClicked} setBoxClicked={setBoxClicked} />
+    <ImageDrop files={files}  setFiles={setFiles} selectedTool={selectedTool} />
   </div>
 
   )
