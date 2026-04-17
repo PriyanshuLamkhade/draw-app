@@ -2,6 +2,7 @@
   "name": "@repo/db",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "exports": {
     "./db": "./src/index.ts"
   },
@@ -10,13 +11,19 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "prisma": "^6.11.1"
+    "@types/node": "^25.0.3",
+    "@types/pg": "^8.16.0",
+    "prisma": "^7.2.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.11.1"
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "@types/dotenv": "^8.2.3",
+    "dotenv": "^17.2.0",
+    "pg": "^8.16.3"
   }
 }

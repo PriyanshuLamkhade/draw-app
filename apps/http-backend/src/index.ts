@@ -1,11 +1,14 @@
+import "dotenv/config";
 import express from "express";
 import jwt from "jsonwebtoken"
 import { middleware } from "./middleware";
 import { JWT_SECRET } from "@repo/backend-common/config"
 import { CreateUserSchema, CreateRoomSchema, SigninSchema } from "@repo/common/types"
 import { prismaClient } from "@repo/db/db";
+import cors from "cors"
 const bcrypt = require('bcrypt');
 const app = express();
+app.use(cors())
 app.use(express.json());
 
 app.post("/signup", async function (req, res) {
@@ -17,7 +20,7 @@ app.post("/signup", async function (req, res) {
     }
     try {
         const hashPassword = await bcrypt.hash(parseData.data.password, 5)
-
+       
         const user = await prismaClient.user.create({
             data: {
                 email: parseData.data.email,

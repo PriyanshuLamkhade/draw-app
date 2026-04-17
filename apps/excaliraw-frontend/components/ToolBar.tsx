@@ -1,3 +1,4 @@
+"use client"
 import { IconButton } from "./IconButton";
 import { Circle, ImagePlusIcon, LucideHand, LucideMousePointer, Menu, Minus, Move, Pencil, RectangleHorizontal } from 'lucide-react'
 import { EllipseIcon } from "@/Icons/EllipseIcon";
@@ -23,8 +24,8 @@ export function ToolBar({ selectedTool, setSelectedTool, setBoxClicked, strokeCo
   const startX = useRef(0);
   const startY = useRef(0);
 
-  return (<div ref={toolBarRef} className="flex  absolute  top-20 left-7">
-
+  return (
+  <div ref={toolBarRef} className="flex  absolute  top-20 left-7">
     <div className=" border border-black max-w-[50vmax]  bg-zinc-800 rounded-xl p-2 items-center flex gap-2 justify-between flex-col "
       onClick={() => setBoxClicked(false)}>
       <div className="bg-zinc-800 -translate-y-5 rounded-t-md py-1 px-3 border-b-0 border border-black cursor-move"
