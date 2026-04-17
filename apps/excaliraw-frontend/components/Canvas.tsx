@@ -7,11 +7,9 @@ import { CanvasClass } from "@/lib/CanvasClass"
 import { useEffect, useRef, useState } from "react"
 
 export default function Canvas({
-    roomId,
     socket
 }: {
     socket: WebSocket;
-    roomId: string;
 }) {
   const [selectedTool, setSelectedTool] = useState("rectangle")
   const [strokeColor,setStrokeColor] =useState("#FFFFFF")

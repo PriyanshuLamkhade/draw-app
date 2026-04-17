@@ -12,6 +12,7 @@ app.use(cors())
 app.use(express.json());
 
 app.post("/signup", async function (req, res) {
+       
     const parseData = CreateUserSchema.safeParse(req.body);
     if (!parseData.success) {
         console.log(parseData.error)

@@ -6,7 +6,6 @@ export default function signup() {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
   return (
     <div>
       <h1>Signup Page</h1>
@@ -16,30 +15,31 @@ export default function signup() {
       </label>
       <br />
       <label>
-        Password: <input type="text"ref={passwordRef} className="border-1  mt-1" />
+        Password:{" "}
+        <input type="text" ref={passwordRef} className="border-1  mt-1" />
       </label>
       <br />
-      <label>
-        Name: <input type="text"ref={nameRef} className="border-1 mt-1 " />
-      </label>
+
       <br />
       <span
         className="text-blue-700 cursor-pointer hover:text-blue-900"
         onClick={() => {
-          router.push("/signin");
+          router.push("/signup");
         }}
       >
-        Already have a account?
+        Don't have a account?
       </span>
-        <br />
+      <br />
       <button
         className="bg-cyan-500 py-2 px-4 rounded-xl cursor-pointer hover:-translate-y-0.5 mt-2"
         onClick={async () => {
-          const res = await submitForm();
-          if (res && res.ok) {
-            router.push("/signin");
+          const data = await submitForm();
+
+          if (data?.jwt) {
+            localStorage.setItem("token", data.jwt);
+            router.push("/rooms");
           } else {
-            console.error("Signup failed");
+            console.error("Signin failed");
           }
         }}
       >
@@ -50,17 +50,15 @@ export default function signup() {
   async function submitForm() {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
-    const name = nameRef.current?.value;
-    console.log("Form submitted with data:", { email, password, name });
-    const response = await fetch(`${HTTP_BACKEND}/signup`, {
+    const response = await fetch(`${HTTP_BACKEND}/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: email,
         password: password,
-        name: name,
       }),
     });
-    return response;
+    const data = await response.json();
+    return data;
   }
 }
