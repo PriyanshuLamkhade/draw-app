@@ -20,6 +20,7 @@ import { WebSocket } from "ws";
 interface User {
   userId: string;
   sockets: Map<WebSocket, Set<number>>;
+  rooms: Set<number>;
 }
 
 export class StateManager {
@@ -43,6 +44,7 @@ export class StateManager {
       this.users.set(userId, {
         userId,
         sockets: new Map([[ws, new Set()]]),
+        rooms: new Set(),
       });
       console.log("New user added");
       return;
@@ -67,33 +69,42 @@ export class StateManager {
       return;
     }
 
+    // 🔴 GLOBAL CHECK (this fixes duplicates)
+    if (user.rooms.has(roomId)) {
+      console.log("User already joined room (global check)");
+      return;
+    }
+
     const userSocket = user.sockets.get(ws);
     if (!userSocket) {
       console.log("Socket not found for user");
       return;
     }
 
-    if (userSocket.has(roomId)) {
-      console.log("User is already joined in the room");
-      return;
-    }
-
     userSocket.add(roomId);
-    console.log(`User ${userId} (socket) joined room ${roomId}`);
+    user.rooms.add(roomId); // ✅ IMPORTANT
+
+    console.log(`User ${userId} joined room ${roomId}`);
   }
 
   removeUserFromRoom(userId: string, ws: WebSocket, roomId: number): void {
     const user = this.getUser(userId);
-    if (!user) {
-      console.log("User not found");
-      return;
-    }
+    if (!user) return;
 
     const rooms = user.sockets.get(ws);
+
     if (rooms?.has(roomId)) {
       rooms.delete(roomId);
-      console.log(`User ${userId} left room ${roomId}`);
     }
+
+    const stillHasSocketInRoom = Array.from(user.sockets.values()).some(
+      (rooms) => rooms.has(roomId),
+    );
+
+    if (!stillHasSocketInRoom) {
+      user.rooms.delete(roomId);
+    }
+    console.log(`User ${userId} left room ${roomId}`);
   }
 
   getUsersInRoom(roomId: number): WebSocket[] {

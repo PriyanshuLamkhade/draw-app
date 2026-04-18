@@ -51,7 +51,6 @@ export default function signup() {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
     const name = nameRef.current?.value;
-    console.log("Form submitted with data:", { email, password, name });
     const response = await fetch(`${HTTP_BACKEND}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

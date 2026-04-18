@@ -6,14 +6,14 @@ import { Queue } from "bullmq"
     }
 })
 
-export function chatProducer(roomId:number,message:string,userId:string){
-
-    sendChat.add("send message",{
+export async function chatProducer(roomId:number,message:string,userId:string){
+    
+    await sendChat.add("send message",{
        
         roomId:roomId,
         message:message,
         userId:userId
-    })
+    });
     console.log("Job added to queue")
 }
 
