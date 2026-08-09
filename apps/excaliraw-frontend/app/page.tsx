@@ -530,22 +530,20 @@ export default function Home() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setActiveTool("pencil")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-all cursor-pointer ${
-                    activeTool === "pencil"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-slate-800 text-slate-400 hover:text-white"
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-all cursor-pointer ${activeTool === "pencil"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-800 text-slate-400 hover:text-white"
+                    }`}
                 >
                   <Pencil className="w-3.5 h-3.5" />
                   <span>Pencil</span>
                 </button>
                 <button
                   onClick={() => setActiveTool("eraser")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-all cursor-pointer ${
-                    activeTool === "eraser"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-slate-800 text-slate-400 hover:text-white"
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1.5 transition-all cursor-pointer ${activeTool === "eraser"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-800 text-slate-400 hover:text-white"
+                    }`}
                 >
                   <Eraser className="w-3.5 h-3.5" />
                   <span>Eraser</span>
@@ -568,9 +566,8 @@ export default function Home() {
                       setActiveColor(color);
                       setActiveTool("pencil");
                     }}
-                    className={`w-6 h-6 rounded-full transition-transform cursor-pointer ${
-                      activeColor === color && activeTool === "pencil" ? "scale-125 ring-2 ring-white ring-offset-2 ring-offset-slate-900" : "hover:scale-110"
-                    }`}
+                    className={`w-6 h-6 rounded-full transition-transform cursor-pointer ${activeColor === color && activeTool === "pencil" ? "scale-125 ring-2 ring-white ring-offset-2 ring-offset-slate-900" : "hover:scale-110"
+                      }`}
                     style={{ backgroundColor: color }}
                   />
                 ))}
