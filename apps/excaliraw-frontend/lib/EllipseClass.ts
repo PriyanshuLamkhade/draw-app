@@ -32,4 +32,12 @@ export class EllipseClass extends ElementClass {
         return ((dx * dx) / (this.radiusX * this.radiusX)) + ((dy * dy) / (this.radiusY * this.radiusY)) <= 1;
     }
 
+    getBoundingBox(): { x: number; y: number; width: number; height: number } {
+        return {
+            x: this.x - this.radiusX,
+            y: this.y - this.radiusY,
+            width: this.radiusX * 2,
+            height: this.radiusY * 2,
+        };
+    }
 }

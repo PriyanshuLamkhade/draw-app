@@ -24,7 +24,17 @@ export class CircleClass extends ElementClass {
 
     }
     isHit(testX: number, testY: number): boolean {
-       return false
+        const dx = testX - this.x;
+        const dy = testY - this.y;
+        return dx * dx + dy * dy <= this.radius * this.radius;
     }
 
+    getBoundingBox(): { x: number; y: number; width: number; height: number } {
+        return {
+            x: this.x - this.radius,
+            y: this.y - this.radius,
+            width: this.radius * 2,
+            height: this.radius * 2,
+        };
+    }
 }

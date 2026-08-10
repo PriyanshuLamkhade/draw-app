@@ -16,6 +16,7 @@ export class CanvasClass {
   startY = 0;
   private panOffset = { x: 0, y: 0 };
   private selectedTool: string;
+  private selectedElement: Shapes | ImageClass | null = null;
   private currentStroke: { x: number; y: number }[] = [];
   private strokeColor;
   private src: string | undefined;
@@ -55,6 +56,50 @@ export class CanvasClass {
     this.Images.forEach((el) =>
       el.draw(this.ctx, this.panOffset.x, this.panOffset.y),
     );
+
+    if (this.selectedElement) {
+      this.drawSelectionBox(this.selectedElement);
+    }
+    this.ctx.restore();
+  }
+
+  private drawSelectionBox(element: Shapes | ImageClass) {
+    const box = element.getBoundingBox();
+    const padding = 6;
+    const x = box.x - padding;
+    const y = box.y - padding;
+    const width = box.width + padding * 2;
+    const height = box.height + padding * 2;
+
+    this.ctx.save();
+    this.ctx.translate(this.panOffset.x, this.panOffset.y);
+
+    // Draw dashed selection border around shape/image
+    this.ctx.strokeStyle = "#3b82f6";
+    this.ctx.lineWidth = 1.5;
+    this.ctx.setLineDash([5, 5]);
+    this.ctx.strokeRect(x, y, width, height);
+
+    // Draw small corner circles for future movement/resizing feature
+    this.ctx.setLineDash([]);
+    const cornerRadius = 4;
+    const corners = [
+      { x: x, y: y }, // Top-Left
+      { x: x + width, y: y }, // Top-Right
+      { x: x, y: y + height }, // Bottom-Left
+      { x: x + width, y: y + height }, // Bottom-Right
+    ];
+
+    corners.forEach((corner) => {
+      this.ctx.beginPath();
+      this.ctx.arc(corner.x, corner.y, cornerRadius, 0, 2 * Math.PI);
+      this.ctx.fillStyle = "#ffffff";
+      this.ctx.fill();
+      this.ctx.strokeStyle = "#3b82f6";
+      this.ctx.lineWidth = 1.5;
+      this.ctx.stroke();
+    });
+
     this.ctx.restore();
   }
   setFiles(fileList: any[]) {
@@ -97,6 +142,31 @@ export class CanvasClass {
       this.canvas.style.cursor = "grabbing";
       this.startPanMousePosition.x = this.clientX;
       this.startPanMousePosition.y = this.clientY;
+    }
+
+    if (this.selectedTool === "mouse" && e.button === 0) {
+      let found: Shapes | ImageClass | null = null;
+
+      // Check shapes from top-most (end) to bottom-most (start)
+      for (let i = this.Shapes.length - 1; i >= 0; i--) {
+        if (this.Shapes[i].isHit(this.clientX, this.clientY)) {
+          found = this.Shapes[i];
+          break;
+        }
+      }
+
+      // Check images if no shape hit
+      if (!found) {
+        for (let i = this.Images.length - 1; i >= 0; i--) {
+          if (this.Images[i].isHit(this.clientX, this.clientY)) {
+            found = this.Images[i];
+            break;
+          }
+        }
+      }
+
+      this.selectedElement = found;
+      this.drawAll();
     }
 
     this.startX = this.clientX;

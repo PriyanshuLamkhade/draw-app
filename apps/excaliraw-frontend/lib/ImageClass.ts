@@ -45,4 +45,23 @@ export class ImageClass {
         }
 
     }
+
+    isHit(testX: number, testY: number): boolean {
+        const minX = Math.min(this.x, this.x + this.width);
+        const maxX = Math.max(this.x, this.x + this.width);
+        const minY = Math.min(this.y, this.y + this.height);
+        const maxY = Math.max(this.y, this.y + this.height);
+        return testX >= minX && testX <= maxX && testY >= minY && testY <= maxY;
+    }
+
+    getBoundingBox(): { x: number; y: number; width: number; height: number } {
+        const minX = Math.min(this.x, this.x + this.width);
+        const minY = Math.min(this.y, this.y + this.height);
+        return {
+            x: minX,
+            y: minY,
+            width: Math.abs(this.width),
+            height: Math.abs(this.height),
+        };
+    }
 }

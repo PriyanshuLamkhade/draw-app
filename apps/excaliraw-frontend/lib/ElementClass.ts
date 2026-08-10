@@ -11,4 +11,6 @@ export abstract class ElementClass {
   abstract draw(ctx:CanvasRenderingContext2D,panOffsetX: number,panOffsetY: number):void 
 
   abstract isHit(x:number, y:number):boolean  
+
+  abstract getBoundingBox(): { x: number; y: number; width: number; height: number }
 }
