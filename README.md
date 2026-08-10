@@ -1,135 +1,141 @@
-# Turborepo starter
+# Excaliraw
 
-This Turborepo starter is maintained by the Turborepo core team.
+Excaliraw is a real-time collaborative drawing application that enables multiple users to sketch, annotate, and create visual content together on a shared canvas. The project is architected as a monorepo using **Turborepo** and **pnpm workspaces**, ensuring modular separation between the frontend, backend services, and shared libraries.
 
-## Using this example
+---
 
-Run the following command:
+## Features
 
-```sh
-npx create-turbo@latest
-```
+- **Real-Time Collaboration** — Multiple users can join a shared room and see each other's drawings update live via WebSocket connections.
+- **Vector Drawing Tools** — A custom-built canvas engine supporting rectangles, circles, ellipses, straight lines, and freehand pencil sketches.
+- **Image Support** — Drag-and-drop image uploads directly onto the canvas with hit-testing and selection capabilities.
+- **Pan & Zoom Navigation** — Scroll-based panning, middle-click drag, and a dedicated hand tool for navigating large canvases.
+- **Element Selection** — Click to select individual shapes with a visual selection box and corner handles.
+- **Asynchronous Persistence** — Drawing events are queued through a Redis-backed BullMQ pipeline and persisted to PostgreSQL by a background worker, keeping the WebSocket server responsive under load.
+- **Authentication & Authorization** — User registration and login with bcrypt password hashing and JWT-based session management.
+- **Room Management** — Create named drawing rooms and retrieve saved canvas history on reconnection.
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Tech Stack
 
-### Apps and Packages
+| Layer             | Technologies                                      |
+| :---------------- | :------------------------------------------------ |
+| **Frontend**      | Next.js 15, React 19, TailwindCSS v4, Lucide Icons |
+| **HTTP API**      | Node.js, Express, CORS                            |
+| **WebSocket**     | Node.js, `ws` library                             |
+| **Queue**         | Redis, BullMQ                                     |
+| **Database**      | PostgreSQL, Prisma ORM                            |
+| **Validation**    | Zod                                               |
+| **Auth**          | JSON Web Tokens, bcrypt                           |
+| **Monorepo**      | Turborepo, pnpm workspaces                        |
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Project Structure
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+draw-app/
+├── apps/
+│   ├── excaliraw-frontend/    # Next.js client application
+│   ├── http-backend/          # Express REST API server
+│   └── ws-backend/            # WebSocket server + BullMQ worker
+├── packages/
+│   ├── db/                    # Prisma schema and database client
+│   ├── common/                # Shared Zod validation schemas
+│   ├── backend-common/        # Shared backend configuration (JWT, etc.)
+│   ├── typescript-config/     # Shared TSConfig presets
+│   └── eslint-config/         # Shared ESLint configuration
+├── docker-compose.yml
+├── turbo.json
+└── pnpm-workspace.yaml
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## Prerequisites
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+Ensure the following are installed on your machine before proceeding:
 
-### Develop
+- [Node.js](https://nodejs.org/) v18 or higher
+- [pnpm](https://pnpm.io/installation) v9 or higher
+- [Docker](https://www.docker.com/) (for Redis and optionally PostgreSQL)
+- A PostgreSQL database (local via Docker or a hosted provider)
 
-To develop all apps and packages, run the following command:
+---
 
-```
-cd my-turborepo
+## Installation
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+**1. Clone the repository**
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+git clone https://github.com/PriyanshuLamkhade/draw-app.git
+cd draw-app
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+**2. Install dependencies**
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+pnpm install
 ```
 
-### Remote Caching
+**3. Set up environment variables**
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+Create a `.env` file inside `packages/db/` and `apps/http-backend/` with the following:
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/excaliraw?schema=public"
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Add the JWT secret to `apps/http-backend/.env`:
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```env
+JWT_SECRET="your-secret-key"
 ```
 
-## Useful Links
+**4. Start infrastructure services**
 
-Learn more about the power of Turborepo:
+```bash
+docker-compose up -d
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+This starts a Redis instance required by the BullMQ queue system.
+
+**5. Initialize the database**
+
+```bash
+pnpm --filter @repo/db prisma generate
+pnpm --filter @repo/db prisma db push
+```
+
+**6. Start the development servers**
+
+```bash
+pnpm dev
+```
+
+Once running, the services are available at:
+
+| Service           | URL                      |
+| :---------------- | :----------------------- |
+| Frontend          | `http://localhost:3000`   |
+| HTTP API          | `http://localhost:3001`   |
+| WebSocket Server  | `ws://localhost:8080`     |
+
+---
+
+## Available Scripts
+
+| Command              | Description                                          |
+| :------------------- | :--------------------------------------------------- |
+| `pnpm dev`           | Start all services in development mode               |
+| `pnpm build`         | Build all applications and packages for production   |
+| `pnpm lint`          | Run ESLint checks across the entire monorepo         |
+| `pnpm format`        | Format all source files with Prettier                |
+| `pnpm check-types`   | Run TypeScript type checking across all workspaces   |
+
+---
+
+## License
+
+This project is private and not currently published under an open-source license.
